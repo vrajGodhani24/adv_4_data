@@ -10,11 +10,9 @@ class DataBaseHelper {
 
   Future<Database?> initDB() async {
     String path = await getDatabasesPath();
-    String databasePath = join(path, "student.db");
+    String databasePath = join(path, "studentDB.db");
 
-    print("-------------------");
     print(databasePath);
-    print("-------------------");
 
     db = await openDatabase(databasePath, version: 1,
         onCreate: (Database db, _) async {
@@ -25,5 +23,15 @@ class DataBaseHelper {
     });
 
     return db;
+  }
+
+  Future<void> insertData(
+      {required String name, required int age, required String contact}) async {
+    db = await initDB();
+
+    String sql = "INSERT INTO student(name,age,contact) VALUES(?,?,?)";
+    List values = [name, age, contact];
+
+    await db!.rawInsert(sql, values);
   }
 }
