@@ -13,11 +13,62 @@ class HomePage extends StatelessWidget {
     String name = "";
     int age = 0;
     String contact = "";
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("HomePage"),
       ),
+      body: GetBuilder<HomePageController>(builder: (context) {
+        return Column(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Search",
+                  ),
+                  onChanged: (val) {
+                    homePageController.searchName(val);
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 10,
+              child: (homePageController.fetchStudentData == [])
+                  ? const Text("No data")
+                  : ListView(
+                      children: (homePageController
+                              .fetchSearchStudentData.isNotEmpty)
+                          ? homePageController.fetchSearchStudentData
+                              .map(
+                                (e) => (e == null)
+                                    ? Container()
+                                    : ListTile(
+                                        leading: const FlutterLogo(size: 60),
+                                        title: Text(e.name),
+                                        subtitle: Text(e.contact),
+                                        trailing: Text("${e.age}"),
+                                      ),
+                              )
+                              .toList()
+                          : homePageController.fetchStudentData
+                              .map(
+                                (e) => ListTile(
+                                  leading: const FlutterLogo(size: 60),
+                                  title: Text(e.name),
+                                  subtitle: Text(e.contact),
+                                  trailing: Text("${e.age}"),
+                                ),
+                              )
+                              .toList(),
+                    ),
+            ),
+          ],
+        );
+      }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -74,6 +125,7 @@ class HomePage extends StatelessWidget {
                               .then((value) {
                             Get.back();
                           });
+                          homePageController.onInit();
                         },
                         child: const Text("Submit"),
                       ),

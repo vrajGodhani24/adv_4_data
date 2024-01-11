@@ -34,4 +34,14 @@ class DataBaseHelper {
 
     await db!.rawInsert(sql, values);
   }
+
+  Future<List<Map<String, Object?>>> fetchAllData() async {
+    db = await initDB();
+
+    String sql = "SELECT * FROM student";
+
+    List<Map<String, Object?>> fetchedData = await db!.rawQuery(sql);
+
+    return fetchedData;
+  }
 }
