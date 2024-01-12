@@ -13,11 +13,12 @@ class HomePage extends StatelessWidget {
     String name = "";
     int age = 0;
     String contact = "";
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("HomePage"),
       ),
-      body: GetBuilder<HomePageController>(builder: (context) {
+      body: GetBuilder<HomePageController>(builder: (controller) {
         return Column(
           children: [
             Expanded(
@@ -46,21 +47,132 @@ class HomePage extends StatelessWidget {
                               .map(
                                 (e) => (e == null)
                                     ? Container()
-                                    : ListTile(
-                                        leading: const FlutterLogo(size: 60),
-                                        title: Text(e.name),
-                                        subtitle: Text(e.contact),
-                                        trailing: Text("${e.age}"),
+                                    : Padding(
+                                        padding: const EdgeInsets.all(3),
+                                        child: Card(
+                                          elevation: 3,
+                                          child: ListTile(
+                                            onTap: () {},
+                                            leading:
+                                                const FlutterLogo(size: 60),
+                                            title: Text(e.name),
+                                            subtitle: Text(e.contact),
+                                            trailing: Text("${e.age}"),
+                                          ),
+                                        ),
                                       ),
                               )
                               .toList()
                           : homePageController.fetchStudentData
                               .map(
-                                (e) => ListTile(
-                                  leading: const FlutterLogo(size: 60),
-                                  title: Text(e.name),
-                                  subtitle: Text(e.contact),
-                                  trailing: Text("${e.age}"),
+                                (e) => Padding(
+                                  padding: const EdgeInsets.all(3),
+                                  child: Card(
+                                    elevation: 3,
+                                    child: ListTile(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return Container(
+                                              padding: const EdgeInsets.all(20),
+                                              height: 400,
+                                              decoration: const BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(25),
+                                                  topRight: Radius.circular(25),
+                                                ),
+                                                color: Colors.white,
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  const Text(
+                                                    "Update Student Details",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  TextField(
+                                                    onChanged: (val) {
+                                                      name = val;
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          const OutlineInputBorder(),
+                                                      hintText: e.name,
+                                                    ),
+                                                  ),
+                                                  TextField(
+                                                    onChanged: (val) {
+                                                      age = int.parse(val);
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          const OutlineInputBorder(),
+                                                      hintText: "${e.age}",
+                                                    ),
+                                                  ),
+                                                  TextField(
+                                                    onChanged: (val) {
+                                                      contact = val;
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          const OutlineInputBorder(),
+                                                      hintText: e.contact,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      OutlinedButton(
+                                                        onPressed: () {
+                                                          Get.back();
+                                                        },
+                                                        child: const Text(
+                                                            "Cancel"),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () async {
+                                                          await DataBaseHelper
+                                                              .databaseHelper
+                                                              .updateData(
+                                                                  id: e.id,
+                                                                  name: name,
+                                                                  age: age,
+                                                                  contact:
+                                                                      contact)
+                                                              .then((value) {
+                                                            Get.back();
+                                                            homePageController
+                                                                .onInit();
+                                                          });
+                                                        },
+                                                        child:
+                                                            const Text("Save"),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      leading: const FlutterLogo(size: 60),
+                                      title: Text(e.name),
+                                      subtitle: Text(e.contact),
+                                      trailing: Text("${e.age}"),
+                                    ),
+                                  ),
                                 ),
                               )
                               .toList(),

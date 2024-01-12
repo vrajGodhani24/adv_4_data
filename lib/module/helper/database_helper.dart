@@ -44,4 +44,17 @@ class DataBaseHelper {
 
     return fetchedData;
   }
+
+  Future<void> updateData(
+      {required int id,
+      required String name,
+      required int age,
+      required String contact}) async {
+    db = await initDB();
+
+    String sql = "UPDATE student SET name = ?,age = ?,contact = ? WHERE id = ?";
+    List values = [name, age, contact, id];
+
+    await db!.rawUpdate(sql, values);
+  }
 }
