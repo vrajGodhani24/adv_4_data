@@ -57,7 +57,16 @@ class HomePage extends StatelessWidget {
                                                 const FlutterLogo(size: 60),
                                             title: Text(e.name),
                                             subtitle: Text(e.contact),
-                                            trailing: Text("${e.age}"),
+                                            trailing: IconButton(
+                                              icon: const Icon(Icons.delete),
+                                              onPressed: () async {
+                                                await DataBaseHelper
+                                                    .databaseHelper
+                                                    .deleteData(id: e.id);
+                                                homePageController.onInit();
+                                              },
+                                              color: Colors.red,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -170,7 +179,16 @@ class HomePage extends StatelessWidget {
                                       leading: const FlutterLogo(size: 60),
                                       title: Text(e.name),
                                       subtitle: Text(e.contact),
-                                      trailing: Text("${e.age}"),
+                                      trailing: IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () async {
+                                          await DataBaseHelper.databaseHelper
+                                              .deleteData(id: e.id);
+
+                                          homePageController.onInit();
+                                        },
+                                        color: Colors.red,
+                                      ),
                                     ),
                                   ),
                                 ),

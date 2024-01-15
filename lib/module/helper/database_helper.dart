@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -56,5 +59,14 @@ class DataBaseHelper {
     List values = [name, age, contact, id];
 
     await db!.rawUpdate(sql, values);
+  }
+
+  Future<void> deleteData({required int id}) async {
+    db = await initDB();
+
+    String sql = "DELETE FROM student WHERE id = ?";
+    List values = [id];
+
+    await db!.rawDelete(sql, values);
   }
 }
